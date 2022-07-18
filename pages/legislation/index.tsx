@@ -70,7 +70,7 @@ function Legislation(legislation: Legislation) {
       <div>
         <h3>Related Documents</h3>
         {legislation.bill.relatedDocs.map(({ relatedDoc }) => (
-          <RelatedDoc {...relatedDoc} />
+          <RelatedDoc key={relatedDoc.uri} {...relatedDoc} />
         ))}
       </div>
       {/* <button onClick={printLegislation}>Print legislation to console</button> */}

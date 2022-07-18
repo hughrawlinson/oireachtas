@@ -73,7 +73,7 @@ export default function MembersIndex(props: MembersIndexProps) {
     <main>
       <h1>Members</h1>
       {props.members.results.map((member) => (
-        <Member member={member.member} />
+        <Member key={member.member.uri} member={member.member} />
       ))}
     </main>
   );
