@@ -55,8 +55,20 @@ export interface RelatedDoc {
   uri: string;
 }
 
+interface Act {
+  actNo: string;
+  actYear: string;
+  dateSigned: string;
+  longTitleEn: string;
+  longTitleGa: string;
+  shortTitleEn: string;
+  shortTitleGa: string;
+  statuebookURI: string;
+  uri: string;
+}
+
 interface Bill {
-  act: null;
+  act?: Act;
   amendmentList: Amendment[];
   billNo: string;
   billType: string;

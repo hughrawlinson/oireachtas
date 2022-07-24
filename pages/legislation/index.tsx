@@ -47,6 +47,20 @@ function Legislation(legislation: Legislation) {
   return (
     <article>
       <h2>{legislation.bill.shortTitleEn}</h2>
+      {legislation.bill.act ? (
+        <p>
+          (Act {legislation.bill.act.actNo} of {legislation.bill.act.actYear})
+        </p>
+      ) : null}
+      <p>
+        Bill {legislation.bill.billNo} of {legislation.bill.billYear}
+      </p>
+      View on{" "}
+      <a
+        href={`https://www.oireachtas.ie/en/bills/bill/${legislation.bill.billYear}/${legislation.bill.billNo}/`}
+      >
+        Oireachtas.ie
+      </a>
       <details>
         <summary>Long description</summary>
         {legislation.bill.longTitleEn}
