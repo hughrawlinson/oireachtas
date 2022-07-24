@@ -53,7 +53,7 @@ function Legislation(legislation: Legislation) {
         </p>
       ) : null}
       <p>
-        Bill {legislation.bill.billNo} of {legislation.bill.billYear}
+        Bill {legislation.bill.billNo} of {legislation.bill.billYear}.
       </p>
       View on{" "}
       <a
@@ -80,6 +80,8 @@ function Legislation(legislation: Legislation) {
             sponsor={s.sponsor}
           />
         ))}
+        <p>Source: {legislation.bill.source}</p>
+        <p>Originating House: {legislation.bill.originHouse.showAs}</p>
       </div>
       <div>
         <h3>Related Documents</h3>
