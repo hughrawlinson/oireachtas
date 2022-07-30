@@ -124,7 +124,10 @@ interface GetLegislationResult {
 export async function getLegislation(params?: GetLegislationParams) {
   const url = `${HOST}/legislation?${new URLSearchParams(
     // @ts-ignore
-    params || {}
+    {
+      limit: 20,
+      ...params
+    }
   ).toString()}`;
   console.log(url);
   const response = await fetch(url);

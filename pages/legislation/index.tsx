@@ -1,5 +1,6 @@
 import { GetServerSideProps } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import {
   getLegislation,
   Legislation,
@@ -9,6 +10,8 @@ import {
 
 interface LegislationIndexProps {
   legislation: Awaited<ReturnType<typeof getLegislation>>;
+  limit: number;
+  skip: number;
 }
 
 function RelatedDoc(doc: RelatedDoc) {
@@ -95,21 +98,68 @@ function Legislation(legislation: Legislation) {
   );
 }
 
-export default function LegislationIndex({
-  legislation,
-}: LegislationIndexProps) {
+function PaginationControls({ limit, skip }: { limit: number; skip: number }) {
+  const router = useRouter();
+
+  const nextHref = `${router.pathname}?${new URLSearchParams({
+    ...router.query,
+    skip: (limit + skip).toString(),
+  }).toString()}`;
+
+  const NextElement = (
+    <Link href={nextHref} passHref>
+      <a>Next</a>
+    </Link>
+  );
+
+  const prevHref = `${router.pathname}?${new URLSearchParams({
+    ...router.query,
+    skip: (limit - skip > 0 ? limit - skip : 0).toString(),
+  }).toString()}`;
+
+  const PrevElement =
+    skip > 0 ? (
+      <Link href={prevHref} passHref>
+        <a>Prev</a>
+      </Link>
+    ) : null;
+
   return (
     <div>
-      <h1>Legislation</h1>
-      {legislation.results.map((legislation) => (
-        <Legislation key={legislation.bill.shortTitleEn} {...legislation} />
-      ))}
+      {PrevElement}
+      {NextElement}
     </div>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (req) => {
+export default function LegislationIndex({
+  limit,
+  skip,
+  legislation,
+}: LegislationIndexProps) {
+  console.log(legislation.results.map((result) => result.bill.shortTitleEn));
+
+  return (
+    <div>
+      <h1>Legislation</h1>
+      <PaginationControls limit={limit} skip={skip} />
+      {legislation.results
+        //.filter((legislation) => legislation.bill.act)
+        .map((legislation) => (
+          <Legislation key={legislation.bill.shortTitleEn} {...legislation} />
+        ))}
+      <PaginationControls limit={limit} skip={skip} />
+    </div>
+  );
+}
+
+export const getServerSideProps: GetServerSideProps<
+  LegislationIndexProps
+> = async (req) => {
   const chamberId = req.query?.["chamber_id"];
+  const billSource = req.query?.["bill_source"];
+  const skip = req.query?.["skip"];
+  const limit = req.query?.["limit"];
 
   const options: Parameters<typeof getLegislation>[0] = {};
 
@@ -119,7 +169,31 @@ export const getServerSideProps: GetServerSideProps = async (req) => {
     options.chamber_id = [decodeURIComponent(chamberId)];
   }
 
+  if (Array.isArray(billSource)) {
+    options.bill_source = billSource.map(decodeURIComponent);
+  } else if (billSource) {
+    options.bill_source = [decodeURIComponent(billSource)];
+  }
+
+  try {
+    if (skip && typeof skip === "string") {
+      options.skip = parseInt(skip);
+    }
+  } catch {}
+
+  try {
+    if (limit && typeof limit === "string") {
+      options.limit = parseInt(limit);
+    }
+  } catch {}
+
+  console.log(JSON.stringify(options, null, 2));
+
   const legislation = await getLegislation(options);
 
-  return { props: { legislation } };
+  console.log(legislation.results.map((result) => result.bill.shortTitleEn));
+
+  return {
+    props: { legislation, limit: options.limit || 20, skip: options.skip || 0 },
+  };
 };
