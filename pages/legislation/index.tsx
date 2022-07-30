@@ -98,7 +98,17 @@ function Legislation(legislation: Legislation) {
   );
 }
 
-function PaginationControls({ limit, skip }: { limit: number; skip: number }) {
+interface PaginationControlsProps {
+  limit: number;
+  skip: number;
+  pageDetails: LegislationIndexProps["legislation"]["head"];
+}
+
+function PaginationControls({
+  limit,
+  skip,
+  pageDetails,
+}: PaginationControlsProps) {
   const router = useRouter();
 
   const nextHref = `${router.pathname}?${new URLSearchParams({
@@ -108,7 +118,7 @@ function PaginationControls({ limit, skip }: { limit: number; skip: number }) {
 
   const NextElement = (
     <Link href={nextHref} passHref>
-      <a>Next</a>
+      <a aria-label="Next page">Next</a>
     </Link>
   );
 
@@ -120,14 +130,17 @@ function PaginationControls({ limit, skip }: { limit: number; skip: number }) {
   const PrevElement =
     skip > 0 ? (
       <Link href={prevHref} passHref>
-        <a>Prev</a>
+        <a aria-label="Previous page">Prev</a>
       </Link>
     ) : null;
 
   return (
     <div>
-      {PrevElement}
-      {NextElement}
+      {`Bills ${skip} to ${skip + limit} of ${pageDetails.counts.resultCount}`}
+      <nav aria-label="Legislation Pagination">
+        {PrevElement}
+        {NextElement}
+      </nav>
     </div>
   );
 }
@@ -142,13 +155,21 @@ export default function LegislationIndex({
   return (
     <div>
       <h1>Legislation</h1>
-      <PaginationControls limit={limit} skip={skip} />
+      <PaginationControls
+        limit={limit}
+        skip={skip}
+        pageDetails={legislation.head}
+      />
       {legislation.results
         //.filter((legislation) => legislation.bill.act)
         .map((legislation) => (
           <Legislation key={legislation.bill.shortTitleEn} {...legislation} />
         ))}
-      <PaginationControls limit={limit} skip={skip} />
+      <PaginationControls
+        limit={limit}
+        skip={skip}
+        pageDetails={legislation.head}
+      />
     </div>
   );
 }
