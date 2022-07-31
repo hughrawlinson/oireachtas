@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BillSource } from "../OireachtasAPI";
 
 export function LegislationIndexFilterForm({
   limit,
@@ -7,11 +8,9 @@ export function LegislationIndexFilterForm({
   limit: number;
   skip: number;
 }) {
-  const PossibleSources = ["Government", "Private Member"];
-  const [sources, setSources] =
-    useState<typeof PossibleSources[number][]>(PossibleSources);
+  const [sources, setSources] = useState<readonly BillSource[]>(BillSource);
 
-  const handleSourceChange = (source: typeof PossibleSources[number]) => {
+  const handleSourceChange = (source: BillSource) => {
     setSources((oldSources) =>
       oldSources.includes(source)
         ? oldSources.filter((s) => s != source)
@@ -23,7 +22,7 @@ export function LegislationIndexFilterForm({
     <form style={{ position: "sticky" }}>
       <div>
         <h3>Sources</h3>
-        {PossibleSources.map((source) => {
+        {BillSource.map((source) => {
           const name = `${source} - checkbox`;
           return (
             <div key={source}>

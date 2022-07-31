@@ -1,8 +1,17 @@
 import { HOST, ResultHead } from "..";
 
+export const BillSource = ["Government", "Private Member"] as const;
+export type BillSource = typeof BillSource[number];
+
+export function isBillSource(
+  possibleBillSource: string
+): possibleBillSource is BillSource {
+  return BillSource.includes(possibleBillSource as BillSource);
+}
+
 interface GetLegislationParams {
   bill_status?: string[];
-  bill_source?: string[];
+  bill_source?: BillSource[];
   date_start?: string;
   date_end?: string;
   skip?: number;

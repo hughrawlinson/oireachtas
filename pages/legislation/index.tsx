@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { getLegislation } from "../../features/OireachtasAPI";
+import { getLegislation, isBillSource } from "../../features/OireachtasAPI";
 import LegislationBrowser from "../../features/LegislationBrowser";
 import { LegislationIndexProps } from "../../features/LegislationBrowser/LegislationIndex";
 
@@ -22,9 +22,15 @@ export const getServerSideProps: GetServerSideProps<
   }
 
   if (Array.isArray(billSource)) {
-    options.bill_source = billSource.map(decodeURIComponent);
+    const bs = billSource.map(decodeURIComponent);
+    if (bs.every(isBillSource)) {
+      options.bill_source = bs;
+    }
   } else if (billSource) {
-    options.bill_source = [decodeURIComponent(billSource)];
+    const bs = decodeURIComponent(billSource);
+    if (isBillSource(bs)) {
+      options.bill_source = [bs];
+    }
   }
 
   try {
