@@ -126,10 +126,9 @@ export async function getLegislation(params?: GetLegislationParams) {
     // @ts-ignore
     {
       limit: 20,
-      ...params
+      ...params,
     }
   ).toString()}`;
-  console.log(url);
   const response = await fetch(url);
   return (await response.json()) as unknown as GetLegislationResult;
 }

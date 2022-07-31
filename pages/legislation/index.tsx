@@ -39,11 +39,7 @@ export const getServerSideProps: GetServerSideProps<
     }
   } catch {}
 
-  console.log(JSON.stringify(options, null, 2));
-
   const legislation = await getLegislation(options);
-
-  console.log(legislation.results.map((result) => result.bill.shortTitleEn));
 
   return {
     props: { legislation, limit: options.limit || 20, skip: options.skip || 0 },
