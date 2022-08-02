@@ -84,6 +84,8 @@ export default function LegislationIndex({
                   background: "#999E",
                   padding: "18px",
                   borderRadius: "3px",
+                  position: "sticky",
+                  top: "1px",
                 }}
               >
                 <button type="button" onClick={() => setHighlightBill(null)}>
