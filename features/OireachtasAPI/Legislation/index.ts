@@ -72,7 +72,7 @@ interface Act {
   longTitleGa: string;
   shortTitleEn: string;
   shortTitleGa: string;
-  statuebookURI: string;
+  statutebookURI: string;
   uri: string;
 }
 
@@ -90,7 +90,7 @@ interface Bill {
   longTitleGa: string;
   method: string;
   methodURI: string;
-  mostrecentStage: Stage;
+  mostRecentStage: Stage;
   originHouse: {
     showAs: string;
     uri: string;
