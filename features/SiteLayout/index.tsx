@@ -37,7 +37,7 @@ function TopNav() {
       }}
     >
       {NavElements.map(({ href, label }) => (
-        <Link key={href} passHref href={href}>
+        <Link key={href} passHref href={href} legacyBehavior>
           <a>{label}</a>
         </Link>
       ))}

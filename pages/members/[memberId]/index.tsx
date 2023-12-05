@@ -4,8 +4,7 @@ import {
   GetMembersParams,
   Member,
   Membership,
-} from "../../features/OireachtasAPI";
-import Link from "next/link";
+} from "../../../features/OireachtasAPI";
 
 function Membership({ membership }: { membership: Membership }) {
   return (
@@ -53,7 +52,7 @@ function Membership({ membership }: { membership: Membership }) {
 function Member({ member }: { member: Member }) {
   return (
     <article>
-      <Link href={`/members/${encodeURIComponent(member.uri)}`}><h2>{member.fullName}</h2></Link>
+      <h2>{member.fullName}</h2>
       <span>{member.wikiTitle}</span>
       {member.memberships.map((membership, i) => (
         <Membership
@@ -84,8 +83,13 @@ export const getServerSideProps: GetServerSideProps<MembersIndexProps> = async (
   req
 ) => {
   const chamberId = req.query?.["chamber_id"];
+  const memberId = req.params?.["memberId"];
+  
+  console.log(memberId);
 
-  const options: GetMembersParams = {};
+  const options: GetMembersParams = {
+    member_id: memberId
+  };
 
   if (Array.isArray(chamberId)) {
     options.chamber_id = chamberId.map(decodeURIComponent);
@@ -94,5 +98,7 @@ export const getServerSideProps: GetServerSideProps<MembersIndexProps> = async (
   }
 
   const members = await getMembers({ chamber: "dail", ...options });
+  console.log(JSON.stringify(members,null,2));
   return { props: { members } };
 };
+
